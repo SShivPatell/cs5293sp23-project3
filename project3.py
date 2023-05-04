@@ -22,3 +22,31 @@ if __name__ == '__main__':
     keywords = args.keywords
     
     print(document_Path, summarize, keywords)
+    
+def predict():    
+    filePath = 'smartcity/NV Las Vegas.pdf'
+    reader = PdfReader(filePath)
+    extracted_text = []
+
+    # Iterate through each page in the PDF file
+    for page_num in range(len(reader.pages)):
+
+        page = reader.pages[page_num]
+        # Extract the text from the page
+        text = page.extract_text()
+
+        # Add the extracted text to the list
+        extracted_text.append(text)
+
+    #extracted_text = normalize_corpus(extracted_text)
+
+    # Concatenate the strings in the list into a single string
+    full_text = ' '.join(extracted_text)
+
+    #full_text = normalize_corpus(full_text)
+
+    kmeans = joblib.load('model.pkl')
+    X_new = vectorizer.transform([full_text])
+    cluster_label = kmeans.predict(X_new)
+
+    print(cluster_label)
