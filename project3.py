@@ -24,7 +24,7 @@ if __name__ == '__main__':
     print(document_Path, summarize, keywords)
     
 def predict():    
-    filePath = 'smartcity/NV Las Vegas.pdf'
+    filePath = 'smartcity/OH Cleveland.pdf'
     reader = PdfReader(filePath)
     extracted_text = []
 

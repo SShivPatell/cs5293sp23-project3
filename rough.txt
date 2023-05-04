@@ -1,0 +1,18 @@
+from joblib import dump, load
+
+# Create a TF-IDF vectorizer and transform the 'clean text' column
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(dataFrame['raw text'])
+
+# Train a K-means clustering model with the optimal number of clusters
+k = 4
+kmeans = KMeans(n_clusters=k, n_init = 'auto')
+kmeans.fit(X)
+
+# Assign cluster labels to the original DataFrame
+dataFrame['clusterid'] = kmeans.labels_
+
+# Save the model
+dump(kmeans, 'model.pkl')
+
+dataFrame.to_csv('check.csv', index=False, escapechar='\\')
