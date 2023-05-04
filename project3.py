@@ -50,3 +50,23 @@ def predict():
     cluster_label = kmeans.predict(X_new)
 
     print(cluster_label)
+    
+    
+def train a model():
+    from sklearn.naive_bayes import MultinomialNB
+
+    # Select the input variables as X
+    X = dataFrame['raw text']
+
+    # Select the target variable as Y
+    Y = dataFrame['clusterid']
+
+    vectorizer = CountVectorizer()
+    X = vectorizer.fit_transform(X)
+
+    # Train the model
+    model = MultinomialNB()
+    model.fit(X, Y)
+
+    # Save the model to disk
+    dump(model, 'model.pkl')
