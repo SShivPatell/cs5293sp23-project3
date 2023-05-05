@@ -13,6 +13,11 @@ In this project we need to predict the cluster id of a city given its pdf. In or
 - The following steps will help with the installation of the required packages:
     - Pipenv should be installed
     - To update the environment with the packages use "pipenv sync". This command will install all the required packages.
+    - The nltk stopwords needs to be manually downloaded. Following images shows what the error looks if the package is missing and the image below it shows the process to fix it.
+    -
+    <img width="1392" alt="Screenshot 2023-05-05 at 1 01 58 AM" src="https://user-images.githubusercontent.com/89544171/236387590-c489fa1f-8447-45da-aaa1-b3b038585166.png">
+<img width="1356" alt="Screenshot 2023-05-05 at 1 04 15 AM" src="https://user-images.githubusercontent.com/89544171/236387615-dd69d752-77d9-4c88-89c7-18a42be519a2.png">
+
 
 # How to run
 
