@@ -368,6 +368,7 @@ if __name__ == '__main__':
     summarize = args.summarize
     keywords = args.keywords
     
+    # Get the name of the city
     fileName = os.path.splitext(os.path.basename(document_Path))[0]
     data = readPdf(fileName, document_Path)
     clusterid, dataFrame = predict(data)
