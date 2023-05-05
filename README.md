@@ -62,4 +62,4 @@ In this project we need to predict the cluster id of a city given its pdf. In or
 # Video Link
 
 - My video was bigger than what could be uploaded to Github, so uploaded it to mymedia and its link is as follows:
-    - 
+    - https://mymedia.ou.edu/media/t/1_fq8jpoyc
