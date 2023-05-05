@@ -9,11 +9,7 @@ In this project we need to predict the cluster id of a city given its pdf. In or
 # How to install
 
 - All the required python package names are stored in Pipfile and Pipfile.lock.
-- The modules required for this project are:
-     - json
-     - argparse (used to pass in the arguments when program is run from terminal)
-     - sklearn (used to import Count Vectorizer and Cosine similarity)
-
+- The modules required for this project are given in the Pipfile.
 - The following steps will help with the installation of the required packages:
     - Pipenv should be installed
     - To update the environment with the packages use "pipenv sync". This command will install all the required packages.
@@ -50,21 +46,22 @@ In this project we need to predict the cluster id of a city given its pdf. In or
 # Test Function
 
 - I have 2 tests for the 2 functions described above.
-    - test_Read.py
-        - This functions is used to test if the read function is working correctly. I read in the yummly file and then test if the number of dishes match the expected number of dishes present in the yummly file. If it matches then the test is passed successfully, else it fails.
+    - test_ReadPdf.py
+        - This functions is used to test if the read function is working correctly. I read in a file and check if all the raw data is being read and concated in one row before being returned to predict().
         
-    - test_TrainAndPredict.py
-        - This function is used to test if the output of a given set of ingredients would give the correct prediction using cosine similarity. I check the dictionary returned by trainAndPredict() with the expected output to check if the test passes or not.
+    - test_Predict.py
+        - This function is used to test if the 'AZ Tucson.pdf' is being given a cluster is of 1 or not. If it is then the test is successful since 1 is the cluster value for AZ Tucson in smartcity_eda.tsv.
         
 
 # Bugs and Assumptions
 
-- I am assuming that the ingredients entered by the user would be a part of one of the dishes given in yummly.json file.
-- If an ingredient is not a part of any of the dishes, then I am displaying "The ingredient is not a part of any of the cusine and dishes." so that the user knows that no dish contains the ingredients that were given as the input.
-- If there is a tie in the similiraty score of the 2 cuisines or dishes then the order in which the differnt cuisines were read from the json file would be picked. For example, there are 39774 items in yummly.json. If I enter certain ingredients and the similarity score of item 1304 and 34922 are the same, then the cuisine of item 1304 will be display. 
+- I only have 2 clusters as it was the optimal when I ran K-means. K-means uses random initialization of the centroids which may lead to different optimal k values every time the project3.ipynb file is run.
+    - My predict test case won't pass since the clusters would be different.
+- I am assuming optimal k to be 2.
+- Every time a run project3.py, there is a new smartcity_predict.tsv being generated. The previous information of a city would be overwritten.
 
 
 # Video Link
 
 - My video was bigger than what could be uploaded to Github, so uploaded it to mymedia and its link is as follows:
-    - https://mymedia.ou.edu/media/t/1_7n8jip1y
+    - 
