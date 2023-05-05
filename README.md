@@ -58,8 +58,6 @@ In this project we need to predict the cluster id of a city given its pdf. In or
 - I only have 2 clusters as it was the optimal when I ran K-means. K-means uses random initialization of the centroids which may lead to different optimal k values every time the project3.ipynb file is run.
     - My predict test case won't pass since the clusters would be different.
 - I am assuming optimal k to be 2.
-- Every time a run project3.py, there is a new smartcity_predict.tsv being generated. The previous information of a city would be overwritten.
-
 
 # Video Link
 
