@@ -1,8 +1,9 @@
 import argparse
+from joblib import dump, load
 import os
 import sys
 import json
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from pypdf import PdfReader
 import nltk
@@ -13,7 +14,8 @@ from nltk.corpus import wordnet
 import collections
 from nltk.tokenize.toktok import ToktokTokenizer
 from bs4 import BeautifulSoup
-from joblib import dump, load
+import pandas as pd
+
 
 # used the code given in text_normalizer.py
 tokenizer = ToktokTokenizer()
@@ -310,9 +312,12 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
         
     return normalized_corpus
 
-def readPdf(filePath):
-    reader = PdfReader(filePath)
+# Read the data of the pdf and returns it as a dataframe
+def readPdf(fileName, document_Path):
+    
+    reader = PdfReader(document_Path)
     extracted_text = []
+    dataFrame = pd.DataFrame(columns=['city', 'raw text'])
 
     # Iterate through each page in the PDF file
     for page_num in range(len(reader.pages)):
@@ -320,24 +325,33 @@ def readPdf(filePath):
         page = reader.pages[page_num]
         # Extract the text from the page
         text = page.extract_text()
-
+        
         # Add the extracted text to the list
         extracted_text.append(text)
-    return extracted_text
+    data_dict = {'city': fileName, 'raw text': extracted_text}
+    dataFrame = pd.concat([dataFrame, pd.DataFrame(data_dict)], ignore_index=True)
+    dataFrame = dataFrame.groupby("city")["raw text"].apply(lambda x: " ".join(x)).reset_index()
+    return dataFrame
 
-def predict(newData):    
+# Predicts the clusterid
+def predict(newData):
+    # Normalize the new data
+    newData['clean text'] = normalize_corpus(newData['raw text'])
+
+    new_text = newData['clean text']
     
-    newData = normalize_corpus(newData)
+     #Load the model and vectorizer
+    kmeans = load('model.pkl')
+    vectorizer = load('vectorizer.pkl')
 
-    # Concatenate the strings in the list into a single string
-    full_text = ' '.join(newData)
+    # Transform the new data using the fitted vectorizer
+    new_tfidf = vectorizer.transform(new_text)
 
-    #full_text = normalize_corpus(full_text)
+    # Predict the clusters for the new data using the fitted KMeans model
+    predicted_clusters = kmeans.predict(new_tfidf)
 
-    kmeans = joblib.load('model.pkl')
-    X_new = vectorizer.transform([full_text])
-    cluster_label = kmeans.predict(X_new)
-    return cluster_label
+    return predicted_clusters, newData
+
 
 if __name__ == '__main__':
     
@@ -354,11 +368,13 @@ if __name__ == '__main__':
     summarize = args.summarize
     keywords = args.keywords
     
-    #print(document_Path, summarize, keywords)
-
-    data = readPdf(document_Path)
-    clusterid = predict(data)
-  
-    filename = os.path.splitext(os.path.basename(document_Path))[0]
+    fileName = os.path.splitext(os.path.basename(document_Path))[0]
+    data = readPdf(fileName, document_Path)
+    clusterid, dataFrame = predict(data)
     
-    print([filename] + " clusterid: " + clusterid)
+    # Write to the smartcity_predict.tsv file
+    dataFrame['clusterid'] = clusterid
+    dataFrame.to_csv('smartcity_predict.tsv', sep = '\t', escapechar = '\\')
+    
+    # print the output
+    print(f"[{fileName}]" + " clusterid: " + str(clusterid[0]))
