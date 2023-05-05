@@ -352,6 +352,22 @@ def predict(newData):
 
     return predicted_clusters, newData
 
+# Used to update the smartcity_predict.tsv file
+def writeToTsv(dataFrame):
+
+    # Set the file name
+    file_name = 'smartcity_predict.tsv'
+
+    # Check if the file exists
+    if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        # File exists and is not empty, append row to file
+        df = pd.read_csv(file_name, sep='\t', escapechar='\\')
+        df = pd.concat([df, dataFrame], ignore_index=True)
+        df.to_csv(file_name, sep='\t', escapechar='\\', index=False)
+    else:
+        # File does not exist or is empty, create new file and add header row and data row
+        dataFrame.to_csv('smartcity_predict.tsv', sep = '\t', escapechar = '\\', index = False)
+
 
 if __name__ == '__main__':
     
@@ -375,7 +391,8 @@ if __name__ == '__main__':
     
     # Write to the smartcity_predict.tsv file
     dataFrame['clusterid'] = clusterid
-    dataFrame.to_csv('smartcity_predict.tsv', sep = '\t', escapechar = '\\')
+    # Write to smartcity_predict.tsv
+    writeToTsv(dataFrame)
     
     # print the output
     print(f"[{fileName}]" + " clusterid: " + str(clusterid[0]))
